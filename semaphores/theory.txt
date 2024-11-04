@@ -1,0 +1,13 @@
+A semaphore is a synchronization tool that limits access to a resource by multiple threads. 
+It maintains a counter that determines how many threads can access a resource simultaneously. 
+When the counter reaches zero, other threads trying to access the resource are blocked until the counter is incremented again.
+
+
+Binary Semaphore: This semaphore can have only two values: 0 and 1. 
+It's like a mutex and can be used to allow one thread access at a time.
+
+
+Counting Semaphore: This semaphore can have any non-negative value, which represents the number of 
+threads that can access the resource at the same time.
+
+C++20 provides semaphore library for semaphore implementation. 
