@@ -1,0 +1,21 @@
+A condition variable in C++ is a synchronization primitive that allows threads to wait until a certain condition is met. 
+It’s often used in conjunction with a std::mutex to ensure that only one thread accesses shared data at a time. 
+Condition variables are useful when you have threads that need to wait for some specific event to happen, 
+such as a resource becoming available or a particular state being reached.
+
+- Mutex (std::mutex mtx): A mutex ensures that only one thread accesses shared resources at a time.
+- Condition Variable (std::condition_variable cv): The condition variable allows the thread to wait until condition is true 
+
+initialization: condition_variable cv
+
+cv.wait(lock, condition): Threads can wait on a condition variable until a particular condition is met.
+        While waiting, the thread releases the associated mutex, allowing other threads to modify the condition.
+
+Another thread can notify waiting threads when the condition is met using notify_one() or notify_all(). 
+This will wake up one or all waiting threads, respectively.
+
+cv.notify_one(): Wakes up a single waiting thread. This is efficient when only one thread needs to proceed, 
+typically in producer-consumer scenarios where only one consumer is needed to handle the task.
+
+cv.notify_all(): Wakes up all waiting threads. This is useful if all threads need to check a condition 
+change or if any of them might take action. It can lead to extra context switching if not all threads proceed.
