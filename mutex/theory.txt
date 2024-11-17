@@ -1,0 +1,33 @@
+lock_guard, unique_lock and shared_lock
+
+lock_guard: 
+A lightweight, scope-based mechanism for locking and unlocking a mutex.
+Behavior:
+    Locks the mutex when the lock_guard object is created.
+    Automatically unlocks the mutex when the lock_guard goes out of scope.
+    Does not allow manual locking/unlocking/relocking.
+- Cannot be used with condition variables.	
+- Not movable.	
+- Minimal runtime overhead.	
+
+
+unique_lock:
+A more versatile locking mechanism, providing additional flexibility for locking, unlocking, and condition variable use.
+Behavior:
+    Can be constructed with options for immediate locking, deferred locking, or adopting an already locked mutex.
+    Can be explicitly unlocked and re-locked during its lifetime.
+- Works seamlessly with condition variables.
+- Movable, allowing ownership transfer to another unique_lock.
+- Slightly more overhead due to extra features.
+
+
+shared_lock: 
+- used to implement reader-writer locks.
+- The idea of reader-writer locks is straightforward and extremely useful. An arbitrary number of 
+threads executing read operations can access the critical region at the same time, but only one 
+thread is allowed to write.
+- We can use shared_lock for both exclusive as well as shared locking.
+- It only works with `shared_mutex` and `shared_timed_mutex`. It can not be used with regular mutex.
+- Multiple threads can hold a shared_lock on the same shared_mutex simultaneously, allowing concurrent read access.
+- If a thread acquires a unique_lock on the same mutex, it blocks all other threads, including those trying to acquire shared locks.
+- can not be used with condition variable
