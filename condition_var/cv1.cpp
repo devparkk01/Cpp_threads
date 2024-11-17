@@ -1,42 +1,43 @@
 #include <iostream>
-#include <thread>
-#include <mutex>
 #include <condition_variable>
+#include <mutex>
+#include <thread>
 
 using namespace std; 
 
 mutex mtx;
 condition_variable cv;
-bool ready = false;
 
-void printId(int id) {
-    unique_lock<mutex> lock(mtx); // mutex is needed for condition variable 
-    // Wait until ready becomes true
-    cv.wait(lock, [] { return ready; });
-    // After being notified, proceed
-    cout << "Thread " << id << '\n';
+bool dataReady{false};
+
+void doTheWork(){
+    cout << "Processing shared data.\n" ;
+    this_thread::sleep_for(chrono::seconds(3));
 }
 
-void go() {
-    ready = true;  // set ready to true 
-    cout << "Go signal sent, notifying all threads.\n";
-    // Notify all waiting threads
-    cv.notify_all();
+void waitingForWork(){
+    cout << "Worker: Waiting for work.\n" ;
+    unique_lock<mutex> lck(mtx);
+    cv.wait(lck, []{ return dataReady; });
+    doTheWork();
+    cout << "Work done.\n" ;
 }
 
-int main() {
-    thread threads[5];
-    
-    // Spawn 5 threads
-    for (int i = 0; i < 5; ++i){
-        threads[i] = thread(printId, i);
+void setDataReady(){
+    {
+        unique_lock<mutex> lck(mtx);
+        dataReady = true;
+        cout << "Sender: Data is ready.\n" ;
     }
+    cv.notify_one();
+}
 
-    this_thread::sleep_for(chrono::seconds(1));
-    go(); // Signal all threads to proceed
+int main(){
 
-    // Join all threads
-    for (auto& th : threads) th.join();
+    thread t1(waitingForWork);
+    thread t2(setDataReady);
+    t1.join();
+    t2.join();
 
-    return 0;
+    return 0; 
 }

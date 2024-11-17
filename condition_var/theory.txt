@@ -14,8 +14,9 @@ cv.wait(lock, condition): Threads can wait on a condition variable until a parti
 Another thread can notify waiting threads when the condition is met using notify_one() or notify_all(). 
 This will wake up one or all waiting threads, respectively.
 
-cv.notify_one(): Wakes up a single waiting thread. This is efficient when only one thread needs to proceed, 
-typically in producer-consumer scenarios where only one consumer is needed to handle the task.
+cv.notify_one(): Wakes up a single waiting thread, while the other threads remain in the wait state. 
+This is efficient when only one thread needs to proceed, typically in producer-consumer scenarios where only one 
+consumer is needed to handle the task.
 
 cv.notify_all(): Wakes up all waiting threads. This is useful if all threads need to check a condition 
 change or if any of them might take action. It can lead to extra context switching if not all threads proceed.
