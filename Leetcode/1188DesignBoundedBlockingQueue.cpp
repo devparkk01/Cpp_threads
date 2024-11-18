@@ -14,20 +14,25 @@ public:
     }
     
     void enqueue(int element) {
-        unique_lock<mutex> lock(m);
-        cv.wait(lock, [this](){
-            return (q.size() < capacity);
-        });
-        q.push(element);
+        {
+            unique_lock<mutex> lock(m);
+            cv.wait(lock, [this](){
+                return (q.size() < capacity);
+            });
+            q.push(element);
+        }
         cv.notify_all(); // notify other waiting threads
     }
     
     int dequeue() {
-        unique_lock<mutex> lock(m);
-        cv.wait(lock, [this](){
-            return (!q.empty());
-        });
-        int x = q.front(); q.pop(); 
+        int x ; 
+        {
+            unique_lock<mutex> lock(m);
+            cv.wait(lock, [this](){
+                return (!q.empty());
+            });
+            x = q.front(); q.pop(); 
+        }
         cv.notify_all();  // notify other waiting threads
         return x; 
     }
