@@ -46,15 +46,15 @@ public:
 
                 vector<string> urls = htmlParser.getUrls(curUrl);
 
-                lock.lock();
+                lock.lock(); // lock the mutex because we are gonna modify the queue as well visited set
                 for(auto &url: urls) {
                     if ( visited.find(url) == visited.end() && extractHostName(url) == hostname) {
                         visited.insert(url);
                         q.push(url);
                     }
                 }
+                lock.unlock(); // first release the lock, then notify_all waiting threads. 
                 cv.notify_all(); 
-                lock.unlock();
 
             }
         };
@@ -119,7 +119,7 @@ public:
                 lock.unlock(); 
                 vector<string> urls = htmlParser.getUrls(curUrl);
                 
-                lock.lock();
+                lock.lock(); // lock the mutex because we are gonna modify the queue as well visited set
                 for(auto &url: urls) {
                     if ( visited.find(url) == visited.end() && extractHostName(url) == hostname) {
                         visited.insert(url);
@@ -127,8 +127,8 @@ public:
                     }
                 }
                 working--; // this thread is done crawling, so decrement working count
+                lock.unlock();   // first release the lock, then notify other threads 
                 cv.notify_all(); 
-                lock.unlock();
             }
         };
 
