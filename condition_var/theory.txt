@@ -20,3 +20,19 @@ consumer is needed to handle the task.
 
 cv.notify_all(): Wakes up all waiting threads. This is useful if all threads need to check a condition 
 change or if any of them might take action. It can lead to extra context switching if not all threads proceed.
+
+
+
+Spurious(fake) Wakeup:
+where a thread waiting on a condition variable is awakened without receiving any corresponding notification.
+- happends randomly, sometimes unpredictable
+- sometimes caused by optimisations in operating system( especially in multicore systems)
+- we need to design program to handle it well.
+- use predicate with wait 
+
+
+Lost wakeup-
+Sends sends the notification before receiver gets to wait state, because of this notification is lost and 
+the receiver is waiting and waiting. 
+- Always lock the mutex before checking or modifying shared condition.
+- Use predicate with wait. 
