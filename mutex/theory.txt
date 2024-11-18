@@ -1,3 +1,9 @@
+A mutex is a synchronization primitive that allows only one thread to access a shared resource at a time, 
+ensuring mutual exclusion. A thread has to acquire access of the mutex in order to access the critical part of the code.  
+Mutex have ownership assigned with them, that is to say, the thread that locks a mutex must only unlock it. 
+Also, we must not unlock a mutex that has not been locked.
+
+
 lock_guard, unique_lock and shared_lock
 
 lock_guard: 
