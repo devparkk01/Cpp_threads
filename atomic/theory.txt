@@ -1,0 +1,5 @@
+Why Use Atomic Operations?
+Atomic operations are useful when:
+    - Lock-free programming is desired, as atomics generally perform better than using mutexes for simple variable manipulations.
+    - Non-blocking algorithms are required, as atomics do not involve blocking and waiting like mutexes,
+     which can improve performance in some concurrent scenarios.
